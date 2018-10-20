@@ -10,7 +10,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import ChooseVideo from './chooseVideo';
+import ChooseVideo from './ChooseVideo';
 import Transcribe from './Transcribe';
 import Finish from './Finish';
 
@@ -57,11 +57,11 @@ const steps = ['Choose video file', 'Transcribe', 'Finish'];
 function getStepContent(step) {
     switch (step) {
         case 0:
-            return <ChooseVideo />;
+            return <ChooseVideo/>;
         case 1:
-            return <Transcribe />;
+            return <Transcribe/>;
         case 2:
-            return <Finish />;
+            return <Finish/>;
         default:
             throw new Error('Unknown step');
     }
@@ -71,6 +71,28 @@ class App extends React.Component {
     state = {
         activeStep: 0,
     };
+
+    componentDidMount() {
+        const apiKey = '01cGemVQHqb9wpf1Hq1KP_UDFGbp4MkET0e7uGBqtJ49BoENA-1QWQ4eGggqwI88MPgqoNdbCI-q5iDN5CJ2AiM-o4yI0';
+        const apiURL = 'https://api.rev.ai/revspeech/v1beta/jobs';
+        const stuffs = {
+            "media_url": "https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3",
+            "metadata": "This is a sample submit jobs option",
+        };
+
+
+        fetch(apiURL, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(stuffs), // data can be `string` or {object}!
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': apiKey,
+                'Access-Control-Allow-Origin': '*'
+            }
+        }).then(res => res.json())
+            .then(response => console.log('Success:', JSON.stringify(response)))
+            .catch(error => console.error('Error:', error));
+    }
 
     handleNext = () => {
         this.setState(state => ({
@@ -91,12 +113,14 @@ class App extends React.Component {
     };
 
     render() {
-        const { classes } = this.props;
-        const { activeStep } = this.state;
+        const {classes} = this.props;
+        const {activeStep} = this.state;
+
+        //curl -X POST "https://api.rev.ai/revspeech/v1beta/jobs" -H "Authorization: Bearer <api_key>" -H "Content-Type: multipart/form-data" -F "media=@/path/to/media_file.mp3;type=audio/mp3" -F "options={\"metadata\":\"This is a sample submit jobs option for multipart\"}"
 
         return (
             <React.Fragment>
-                <CssBaseline />
+                <CssBaseline/>
                 <AppBar position="absolute" color="default" className={classes.appBar}>
                     <Toolbar>
                         <Typography variant="h6" color="inherit" noWrap>
