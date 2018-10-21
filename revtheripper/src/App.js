@@ -9,11 +9,24 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ChooseVideo from './ChooseVideo';
 import Transcribe from './Transcribe';
 import Finish from './Finish';
+import { Modal } from './Modal'
+import './App.css'
+import {StripeProvider} from 'react-stripe-elements';
+import {Elements} from 'react-stripe-elements';
 
+import InjectedCheckoutForm from './CheckoutForm';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+
+import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 const styles = theme => ({
     appBar: {
@@ -65,7 +78,9 @@ class App extends React.Component {
         videoURL: '',
         isTranscribing: false,
         transcriptionData: [],
-        transcriptionId: []
+        transcriptionId: [],
+        show: false,
+        dialogOpen: false
     };
 
     componentDidMount() {
@@ -172,22 +187,69 @@ class App extends React.Component {
         });
     };
 
+
+
+    showModal = () => {
+        this.setState({ show: true });
+    };
+
+    hideModal = () => {
+        this.setState({ show: false });
+        this.handleDialogOpen()
+    };
+    handleDialogOpen = () => {
+        this.setState({ dialogOpen: true });
+    };
+
+    handleDialogClose = () => {
+        this.setState({ dialogOpen: false });
+    };
+
+
+
     render() {
         const {classes} = this.props;
         const {activeStep} = this.state;
         //curl -X POST "https://api.rev.ai/revspeech/v1beta/jobs" -H "Authorization: Bearer <api_key>" -H "Content-Type: multipart/form-data" -F "media=@/path/to/media_file.mp3;type=audio/mp3" -F "options={\"metadata\":\"This is a sample submit jobs option for multipart\"}"
 
+        const { fullScreen } = this.props;
         return (
+            <StripeProvider apiKey="pk_test_12345">
             <React.Fragment>
                 <CssBaseline/>
                 <AppBar position="absolute" color="default" className={classes.appBar}>
                     <Toolbar>
-                        <Typography variant="h6" color="inherit" noWrap>
-                            Rev The Ripper
-                        </Typography>
+                        <Grid
+                            justify="space-between" // Add it here :)
+                            container
+                            spacing={24}
+                        >
+                            <Grid item>
+                                <Typography variant="h6" color="inherit" noWrap>
+                                    Rev The Ripper
+                                </Typography>
+                            </Grid>
+
+                            <Grid item>
+                                <span>
+                                     <Button
+                                         variant="contained"
+                                         color="primary"
+                                         onClick={this.showModal}
+                                         className={classes.button}
+                                     >
+                                        {'Buy Credits'}
+                                    </Button>
+                                    <Typography style={{marginRight: '30px'}}  align="right" variant="h6" color="inherit" noWrap>
+                                           Credits: 5
+                                    </Typography>
+                                </span>
+                            </Grid>
+                        </Grid>
                     </Toolbar>
                 </AppBar>
                 <main className={classes.layout}>
+
                     <Paper className={classes.paper}>
                         <Typography component="h1" variant="h4" align="center">
                             Create Transcribed Blog
@@ -226,7 +288,31 @@ class App extends React.Component {
                         </React.Fragment>
                     </Paper>
                 </main>
+                <Modal show={this.state.show} handleClose={this.hideModal}>
+                    <Elements>
+                        <InjectedCheckoutForm closeModal={this.hideModal}/>
+                    </Elements>
+                </Modal>
+                <Dialog
+                    open={this.state.dialogOpen}
+                    onClose={this.handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">$10 Credit Purchase</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                           Your purchase was successful
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleDialogClose} color="primary">
+                            Ok
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
             </React.Fragment>
+            </StripeProvider>
         );
     }
 }
