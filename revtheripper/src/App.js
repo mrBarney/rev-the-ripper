@@ -26,7 +26,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 
-import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 const styles = theme => ({
     appBar: {
