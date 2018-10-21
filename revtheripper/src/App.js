@@ -31,6 +31,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 const styles = theme => ({
     appBar: {
         position: 'relative',
+        paddingBottom: 30
     },
     layout: {
         width: 'auto',
@@ -65,7 +66,7 @@ const styles = theme => ({
     },
 });
 
-const steps = ['Choose video file', 'Estimate','Transcribe', 'Finish'];
+const steps = ['Choose audio file', 'Cost Estimation','Transcribe', 'Finish'];
 let keepGoing = true;
 
 class App extends React.Component {
@@ -252,7 +253,7 @@ class App extends React.Component {
                 <main className={classes.layout}>
                     <Paper className={classes.paper}>
                         <Typography component="h1" variant="h4" align="center">
-                            Create Transcribed Blog
+                            Transcribe Audio File
                         </Typography>
                         <Stepper activeStep={activeStep} className={classes.stepper}>
                             {steps.map(label => (

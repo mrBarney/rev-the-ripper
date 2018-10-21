@@ -11,13 +11,20 @@ class Finish extends React.Component {
 
         this.data = this.props.data;
         this.url = this.props.url;
-        this.to_html = this.to_html.bind(this);
         this.handleClick = this.handleClick.bind(this);
     }
 
     state = {
         timeStamp: 0,
     };
+
+    componentDidMount(){
+        sound = <Sound
+            url={this.props.url}
+            playStatus={Sound.status.PLAYING}
+            playFromPosition={0 /* in milliseconds */}
+        />;
+    }
 
     componentDidUpdate(prevState){
         if(prevState.timeStamp !== this.state.timeStamp){
@@ -30,19 +37,20 @@ class Finish extends React.Component {
         }
     }
 
-    handleClick() {
+    handleClick(event) {
+        event.preventDefault();
         let urlParams = new URLSearchParams(window.location.search);
         let time = urlParams.get('t');
         console.log('time: ' + time);
         this.setState({
             timeStamp: time
         });
-    };
+    }
 
     to_html(elems, starter_word_idxs, utube_url) {
         // Replace starter word index-1 value with youtube link to word ts
         for(let i = 0; i < starter_word_idxs.length; i++){
-            elems[starter_word_idxs[i]-1].value = '<a href=#?t=' + Math.floor(elems[starter_word_idxs[i]].ts)*1000 + ' onClick="handleClick()">.['+starter_word_idxs[i].ts+']</a><br/><br/>';
+            elems[starter_word_idxs[i]-1].value = ' <a href=#?t=' + Math.floor(elems[starter_word_idxs[i]].ts)*1000 + ' onClick={this.handleClick} onContextMenu={this.handleClick}>['+elems[starter_word_idxs[i]].ts+']</a><br/><br/>';
         }
         return elems;
         // Replace each word after a newline with a youtube link
@@ -50,7 +58,6 @@ class Finish extends React.Component {
     }
 
     render() {
-        const {timeStamp} = this.state;
         const data = this.props.data;
         const url = this.props.url;
 
@@ -63,7 +70,7 @@ class Finish extends React.Component {
                 if (elems[i].value === '. ')
                     starter_words.push(i + 1);
 
-            return starter_words
+            return starter_words;
         }
 
         function word_diffs_by_index(idxs, elems) {
@@ -92,11 +99,7 @@ class Finish extends React.Component {
                 return acc + e[0].value
             }, '');
 
-        sound = <Sound
-            url={url}
-            playStatus={Sound.status.PLAYING}
-            playFromPosition={0 /* in milliseconds */}
-        />;
+
 
         return (
             <React.Fragment>
