@@ -49,13 +49,25 @@ function enumerate(l) {
    return x
 }
 
-const elems = allText[0].elements.concat( allText[1].elements )
+function to_html(elems, starter_word_idxs, utube_url) {
+   // Replace starter word index-1 value with youtube link to word ts
+   starter_word_idxs.forEach( (i,_) => {
+      elems[i-1].value = '<a href='+utube_url+'?t='+Math.floor(elems[i].ts)+'>.</a>'
+   })
+   return elems
+   // Replace each word after a newline with a youtube link
+   //text.replace(/\.\n/g, "<a href=utube_url+'&t=x'>.</a>\n")
+}
+
+let elems = allText[0].elements.concat( allText[1].elements )
 const s = starter_words_index(elems)
 const diffs = word_diffs_by_index(s, elems)
 
 //console.log(s)
 console.log(diffs)
 console.log('avg dur ' + avg_dur(elems))
+
+elems = to_html(elems, s, 'www.youtube.com/fuknutz')
 
 const topd = zip([diffs,s]).sort( (a,b) => b[0] - a[0] ).slice(0,6)
 const top_idxs = topd.map(x=>x[1])
