@@ -57,11 +57,13 @@ const diffs = word_diffs_by_index(s, elems)
 console.log(diffs)
 console.log('avg dur ' + avg_dur(elems))
 
-const topd = zip([diffs,s])
+const topd = zip([diffs,s]).sort( (a,b) => b[0] - a[0] ).slice(0,6)
+const top_idxs = topd.map(x=>x[1])
+console.log('topd ' + topd)
 
 const text = enumerate(elems).reduce(
    (acc, e) => {
-      if ( contains(s,e[1]) ) acc+='\n'
+      if ( contains(top_idxs,e[1]) ) acc+='\n'
       return acc + e[0].value
    }, '')
 
