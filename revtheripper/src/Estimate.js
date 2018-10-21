@@ -8,11 +8,10 @@ class Estimate extends React.Component {
         return (
             <React.Fragment>
                 <Typography variant="h6" gutterBottom>
-
                 </Typography>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
-                       <h2> Estimate Cost : $0.55</h2>
+                       <h2> Estimate Cost : ${(Math.random()*3.3).toPrecision(3)}</h2>
                     </Grid>
                 </Grid>
             </React.Fragment>

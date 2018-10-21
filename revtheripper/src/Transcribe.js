@@ -22,14 +22,15 @@ class Transcribe extends React.Component {
         if (completed > 100) {
             this.setState({ completed: 0, buffer: 10 });
         } else {
-            const diff = Math.random() * 0.8;
-            const diff2 = Math.random() * 0.8;
+            const diff = Math.random() * 0.65;
+            const diff2 = Math.random() * 0.65;
             this.setState({ completed: completed + diff, buffer: completed + diff + diff2 });
         }
     };
 
     render() {
         const { completed, buffer } = this.state;
+
         return (
             <React.Fragment>
                 <Typography variant="h6" gutterBottom>

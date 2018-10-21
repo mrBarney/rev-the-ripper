@@ -226,7 +226,7 @@
 
 body,
 html {
-  background-color: #f6f9fc;
+  opacity:1.0;
   font-size: 18px;
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }

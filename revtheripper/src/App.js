@@ -143,21 +143,13 @@ class App extends React.Component {
                     }).then(response => {
                         if (response.current_value !== 'in_progress') {
                             this.setState({
-                                transcriptionData: response.monologues.elements.map(function (d) {
-                                    return {
-                                        type: d.type,
-                                        valu: d.valu,
-                                        ts: d.ts,
-                                        end_ts: d.end_ts,
-                                        confidence: d.confidence
-                                    }
-                                }),
+                                transcriptionData: response.monologues,
                                 isTranscribing: false,
                             });
                         }
                     });
                 }
-            }, 5000);
+            }, 10000);
         } catch (e) {
             console.log(e);
         }
@@ -177,6 +169,7 @@ class App extends React.Component {
             case 3:
                 return <Finish
                     data={this.state.transcriptionData}
+                    url={this.state.videoURL}
                 />;
             default:
                 throw new Error('Unknown step');
@@ -241,7 +234,6 @@ class App extends React.Component {
                                     Rev The Ripper
                                 </Typography>
                             </Grid>
-
                             <Grid item>
                                 <span>
                                      <Button
@@ -258,7 +250,6 @@ class App extends React.Component {
                     </Toolbar>
                 </AppBar>
                 <main className={classes.layout}>
-
                     <Paper className={classes.paper}>
                         <Typography component="h1" variant="h4" align="center">
                             Create Transcribed Blog
