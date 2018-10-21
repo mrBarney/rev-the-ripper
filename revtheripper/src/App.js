@@ -13,6 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ChooseVideo from './ChooseVideo';
 import Transcribe from './Transcribe';
+import Estimate from './Estimate';
 import Finish from './Finish';
 import { Modal } from './Modal'
 import './App.css'
@@ -65,7 +66,7 @@ const styles = theme => ({
     },
 });
 
-const steps = ['Choose video file', 'Transcribe', 'Finish'];
+const steps = ['Choose video file', 'Estimate','Transcribe', 'Finish'];
 
 class App extends React.Component {
     constructor(props){
@@ -158,8 +159,12 @@ class App extends React.Component {
                         onVideoChange={this.handleURL}
                     />);
             case 1:
-                return <Transcribe/>;
+                return <Estimate/>;
+
+
             case 2:
+                return <Transcribe/>;
+            case 3:
                 return <Finish/>;
             default:
                 throw new Error('Unknown step');
@@ -239,11 +244,8 @@ class App extends React.Component {
                                          onClick={this.showModal}
                                          className={classes.button}
                                      >
-                                        {'Buy Credits'}
+                                        {'Add Card'}
                                     </Button>
-                                    <Typography style={{marginRight: '30px'}}  align="right" variant="h6" color="inherit" noWrap>
-                                           Credits: 5
-                                    </Typography>
                                 </span>
                             </Grid>
                         </Grid>
@@ -299,10 +301,10 @@ class App extends React.Component {
                     onClose={this.handleClose}
                     aria-labelledby="form-dialog-title"
                 >
-                    <DialogTitle id="form-dialog-title">$10 Credit Purchase</DialogTitle>
+                    <DialogTitle id="form-dialog-title">Card Added</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                           Your purchase was successful
+                           Your card was successfully added
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
