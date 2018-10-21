@@ -66,6 +66,7 @@ const styles = theme => ({
 });
 
 const steps = ['Choose video file', 'Estimate','Transcribe', 'Finish'];
+let keepGoing = true;
 
 class App extends React.Component {
     constructor(props){
@@ -97,14 +98,12 @@ class App extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.activeStep !== 1 && this.state.activeStep === 1) {
+        if (prevState.activeStep !== 2 && this.state.activeStep === 2) {
             this.beginTranscribing();
         }
         if (prevState.isTranscribing && !this.state.isTranscribing) {
-            console.log(this.state.transcriptionData);
-        }
-        if(this.state.transcriptionId){
-            console.log(this.state.transcriptionId);
+            keepGoing = false;
+            this.handleNext();
         }
     }
 
@@ -114,9 +113,9 @@ class App extends React.Component {
                 isTranscribing: true
             });
             const apiURL = 'https://revripper.azurewebsites.net/api/HttpTrigger1?code=t7QLfsNQkTDjoXtAaK9j2NWxnDx0fmreRwuSkt2XI4m1fkstvI5dzA==&url=' + this.state.videoURL;
+
             fetch(apiURL, {
                 method: 'GET', // or 'PUT'
-                //body: JSON.stringify(stuffs), // data can be `string` or {object}!
             }).then(response => {
                 if (response.ok) {
                     return response.json();
@@ -127,24 +126,38 @@ class App extends React.Component {
             }).then(response => this.setState({
                 transcriptionId: response,
             }));
+
             console.log(this.state.transcriptionId);
 
             setInterval(async () => {
-                console.log(this.state.transcriptionData);
-                fetch('https://revripper.azurewebsites.net/api/HttpTrigger3?code=GRHoJoTntJRCSvajAlgX1tawrnRT74bSoxys68ox4ytoj5KMCukqCg==&id=' + this.state.transcriptionId.id, {
-                    method: 'GET',
-                }).then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    else {
-                        console.log('Not finished transcribing');
-                    }
-                }).then(response => this.setState({
-                    transcriptionData: response,
-                    isTranscribing: false,
-                }));
-            }, 20000);
+                if(keepGoing) {
+                    fetch('https://revripper.azurewebsites.net/api/HttpTrigger3?code=GRHoJoTntJRCSvajAlgX1tawrnRT74bSoxys68ox4ytoj5KMCukqCg==&id=' + this.state.transcriptionId.id, {
+                        method: 'GET',
+                    }).then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        else {
+                            console.log('Not finished transcribing');
+                        }
+                    }).then(response => {
+                        if (response.current_value !== 'in_progress') {
+                            this.setState({
+                                transcriptionData: response.monologues.elements.map(function (d) {
+                                    return {
+                                        type: d.type,
+                                        valu: d.valu,
+                                        ts: d.ts,
+                                        end_ts: d.end_ts,
+                                        confidence: d.confidence
+                                    }
+                                }),
+                                isTranscribing: false,
+                            });
+                        }
+                    });
+                }
+            }, 5000);
         } catch (e) {
             console.log(e);
         }
@@ -159,12 +172,12 @@ class App extends React.Component {
                     />);
             case 1:
                 return <Estimate/>;
-
-
             case 2:
                 return <Transcribe/>;
             case 3:
-                return <Finish/>;
+                return <Finish
+                    data={this.state.transcriptionData}
+                />;
             default:
                 throw new Error('Unknown step');
         }
@@ -192,8 +205,6 @@ class App extends React.Component {
         });
     };
 
-
-
     showModal = () => {
         this.setState({ show: true });
     };
@@ -210,14 +221,10 @@ class App extends React.Component {
         this.setState({ dialogOpen: false });
     };
 
-
-
     render() {
         const {classes} = this.props;
         const {activeStep} = this.state;
-        //curl -X POST "https://api.rev.ai/revspeech/v1beta/jobs" -H "Authorization: Bearer <api_key>" -H "Content-Type: multipart/form-data" -F "media=@/path/to/media_file.mp3;type=audio/mp3" -F "options={\"metadata\":\"This is a sample submit jobs option for multipart\"}"
 
-        const { fullScreen } = this.props;
         return (
             <StripeProvider apiKey="pk_test_12345">
             <React.Fragment>
@@ -281,6 +288,7 @@ class App extends React.Component {
                                             color="primary"
                                             onClick={this.handleNext}
                                             className={classes.button}
+                                            disabled={this.state.isTranscribing}
                                         >
                                             {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                                         </Button>
