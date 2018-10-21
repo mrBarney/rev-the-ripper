@@ -73,21 +73,13 @@ class App extends React.Component {
     };
 
     componentDidMount() {
-        const apiKey = '01cGemVQHqb9wpf1Hq1KP_UDFGbp4MkET0e7uGBqtJ49BoENA-1QWQ4eGggqwI88MPgqoNdbCI-q5iDN5CJ2AiM-o4yI0';
-        const apiURL = 'https://api.rev.ai/revspeech/v1beta/jobs';
-        const stuffs = {
-            "media_url": "https://support.rev.com/hc/en-us/article_attachments/200043975/FTC_Sample_1_-_Single.mp3",
-            "metadata": "This is a sample submit jobs option",
-        };
-
+        // const apiKey = '01cGemVQHqb9wpf1Hq1KP_UDFGbp4MkET0e7uGBqtJ49BoENA-1QWQ4eGggqwI88MPgqoNdbCI-q5iDN5CJ2AiM-o4yI0';
+        const apiURL = 'https://revripper.azurewebsites.net/api/HttpTrigger1?code=t7QLfsNQkTDjoXtAaK9j2NWxnDx0fmreRwuSkt2XI4m1fkstvI5dzA==&name=JordanBarnfield';
 
         fetch(apiURL, {
-            method: 'POST', // or 'PUT'
-            body: JSON.stringify(stuffs), // data can be `string` or {object}!
+            method: 'GET', // or 'PUT // data can be `string` or {object}!
             headers: {
                 'Content-Type': 'multipart/form-data',
-                'Authorization': apiKey,
-                'Access-Control-Allow-Origin': '*'
             }
         }).then(res => res.json())
             .then(response => console.log('Success:', JSON.stringify(response)))
