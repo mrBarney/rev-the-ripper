@@ -3,19 +3,21 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-function Transcribe() {
-    return (
-        <React.Fragment>
-            <Typography variant="h6" gutterBottom>
+class Transcribe extends React.Component {
+    render() {
+        return (
+            <React.Fragment>
+                <Typography variant="h6" gutterBottom>
 
-            </Typography>
-            <Grid container spacing={24}>
-                <Grid item xs={12}>
-                <CircularProgress/>
+                </Typography>
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                        <CircularProgress/>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </React.Fragment>
-    );
+            </React.Fragment>
+        );
+    }
 }
 
 export default Transcribe;
