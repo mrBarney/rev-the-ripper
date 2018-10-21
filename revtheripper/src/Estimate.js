@@ -1,25 +1,18 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-class Finish extends React.Component {
-    constructor(props){
-        super(props);
-
-        this.data = this.props.data;
-    }
-
-
-    render(){
-        const data = this.props.data;
-
+class Estimate extends React.Component {
+    render() {
         return (
             <React.Fragment>
                 <Typography variant="h6" gutterBottom>
-                    {data}
+
                 </Typography>
                 <Grid container spacing={24}>
                     <Grid item xs={12}>
+                       <h2> Estimate Cost : $0.55</h2>
                     </Grid>
                 </Grid>
             </React.Fragment>
@@ -27,4 +20,4 @@ class Finish extends React.Component {
     }
 }
 
-export default Finish;
+export default Estimate;
