@@ -34,9 +34,9 @@ class CheckoutForm extends React.Component {
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
-                <h2>$10 Credit </h2>
+                <h2>Add Card for Purchases Today </h2>
                 <CardSection />
-                <button onClick={this.closeModal}>Confirm order</button>
+                <button onClick={this.closeModal}>Confirm Card Addition</button>
             </form>
         );
     }
