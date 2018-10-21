@@ -112,10 +112,11 @@ class App extends React.Component {
             }).then(response => this.setState({
                 transcriptionId: response,
             }));
+            console.log(this.state.transcriptionId);
 
             setInterval(async () => {
-                console.log(this.state.transcriptionId);
-                fetch('https://revripper.azurewebsites.net/api/HttpTrigger3?code=GRHoJoTntJRCSvajAlgX1tawrnRT74bSoxys68ox4ytoj5KMCukqCg==&transcriptID=' + this.state.transcriptionId.id, {
+                console.log(this.state.transcriptionData);
+                fetch('https://revripper.azurewebsites.net/api/HttpTrigger3?code=GRHoJoTntJRCSvajAlgX1tawrnRT74bSoxys68ox4ytoj5KMCukqCg==&id=' + this.state.transcriptionId.id, {
                     method: 'GET',
                 }).then(response => {
                     if (response.ok) {
@@ -128,7 +129,7 @@ class App extends React.Component {
                     transcriptionData: response,
                     isTranscribing: false,
                 }));
-            }, 30000);
+            }, 20000);
         } catch (e) {
             console.log(e);
         }
